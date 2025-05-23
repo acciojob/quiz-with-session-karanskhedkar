@@ -30,8 +30,30 @@ const questions = [
   },
 ];
 
+const handleSelection = (event) => {
+  const question = event.target.parentElement;
+  const answer = event.target.value;
+  const remove = [];
+  question.childNodes.forEach((element) => {
+    if (element.textContent && !element.textContent.includes("?")) {
+      if (answer !== element.textContent) {
+        remove.push(element.textContent);
+      }
+    }
+  });
+  const temp = JSON.parse(sessionStorage.getItem("progress"));
+  if (temp) {
+    const temUpdated = temp.filter((ele) => !remove.includes(ele));
+    sessionStorage.setItem("progress", JSON.stringify([...temUpdated, answer]));
+  } else {
+    sessionStorage.setItem("progress", JSON.stringify([answer]));
+  }
+};
+
 // Display the quiz questions and choices
 function renderQuestions() {
+  const userAnswers = JSON.parse(sessionStorage.getItem("progress"));
+  const questionsElement = document.getElementById("questions");
   for (let i = 0; i < questions.length; i++) {
     const question = questions[i];
     const questionElement = document.createElement("div");
@@ -43,7 +65,8 @@ function renderQuestions() {
       choiceElement.setAttribute("type", "radio");
       choiceElement.setAttribute("name", `question-${i}`);
       choiceElement.setAttribute("value", choice);
-      if (userAnswers[i] === choice) {
+      choiceElement.onchange = handleSelection;
+      if (userAnswers && userAnswers.includes(choice)) {
         choiceElement.setAttribute("checked", true);
       }
       const choiceText = document.createTextNode(choice);
@@ -54,3 +77,15 @@ function renderQuestions() {
   }
 }
 renderQuestions();
+
+const calculateScore = () => {
+  const scoreElement = document.getElementById("score");
+  const userAnswers = JSON.parse(sessionStorage.getItem("progress"));
+  if (userAnswers) {
+    scoreElement.innerText = `Your score is ${userAnswers.length} out of 5.`;
+    localStorage.setItem(userAnswers.length);
+  } else {
+    scoreElement.innerText = `Your score is 0 out of 5.`;
+    localStorage.setItem(0);
+  }
+};
