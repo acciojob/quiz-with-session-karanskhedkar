@@ -2,6 +2,7 @@
 
 // Do not change code below this line
 // This code will just display the questions to the screen
+const correctAnswers=["Paris","Everest","Russia","Jupiter","Ottawa"]
 const questions = [
   {
     question: "What is the capital of France?",
@@ -82,8 +83,9 @@ const calculateScore = () => {
   const scoreElement = document.getElementById("score");
   const userAnswers = JSON.parse(sessionStorage.getItem("progress"));
   if (userAnswers) {
-    scoreElement.innerText = `Your score is ${userAnswers.length} out of 5.`;
-    localStorage.setItem("score",userAnswers.length);
+    const correct=userAnswers.filter((ele)=>correctAnswers.includes(ele))
+    scoreElement.innerText = `Your score is ${correct.length} out of 5.`;
+    localStorage.setItem("score",correct.length);
   } else {
     scoreElement.innerText = `Your score is 0 out of 5.`;
     localStorage.setItem("score",0);
