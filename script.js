@@ -83,9 +83,9 @@ const calculateScore = () => {
   const userAnswers = JSON.parse(sessionStorage.getItem("progress"));
   if (userAnswers) {
     scoreElement.innerText = `Your score is ${userAnswers.length} out of 5.`;
-    localStorage.setItem(userAnswers.length);
+    localStorage.setItem("score",userAnswers.length);
   } else {
     scoreElement.innerText = `Your score is 0 out of 5.`;
-    localStorage.setItem(0);
+    localStorage.setItem("score",0);
   }
 };
